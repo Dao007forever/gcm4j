@@ -40,7 +40,7 @@ import com.bethzur.gcm4j.auth.ApiKeyAuthProvider;
  * threads (i.e., sufficient for a thread-pool of size {@code MAX_THREADS}) can
  * be obtained like this:<br/>
  * <code>
- * &nbsp;&nbsp;&nbsp;&nbsp; ThreadSafeClientConnManager connManager = new ThreadSafeClientConnManager(); <br/>
+ * &nbsp;&nbsp;&nbsp;&nbsp; PoolingClientConnectionManager connManager = new PoolingClientConnectionManager(); <br/>
  * &nbsp;&nbsp;&nbsp;&nbsp; conmManager.setMaxTotal(MAX_THREADS); <br/>
  * &nbsp;&nbsp;&nbsp;&nbsp; connManager.setDefaultMaxPerRoute(MAX_THREADS); <br/>
  * &nbsp;&nbsp;&nbsp;&nbsp; HttpClient client = new DefaultHttpClient(connManager); <br/>

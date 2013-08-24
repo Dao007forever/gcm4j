@@ -114,7 +114,7 @@ public class AsyncGcmManagerFactory {
 	 * the {@code ScheduleExecutorService} will run concurrently. An
 	 * {@code HttpClient} instance for {@code MAX_THREADS} concurrent threads
 	 * can be created like this: </br> <code>
-	 *   ThreadSafeClientConnManager connManager = new ThreadSafeClientConnManager(); </br>
+	 *   PoolingClientConnectionManager connManager = new PoolingClientConnectionManager(); </br>
 	 *   conmManager.setMaxTotal(MAX_THREADS); </br>
 	 *   connManager.setDefaultMaxPerRoute(MAX_THREADS); </br>
 	 *   HttpClient client = new DefaultHttpClient(connManager); </br>
@@ -162,7 +162,7 @@ public class AsyncGcmManagerFactory {
 	 * the {@code ScheduleExecutorService} will run concurrently. An
 	 * {@code HttpClient} instance for {@code MAX_THREADS} concurrent threads
 	 * can be created like this: </br> <code>
-	 *   ThreadSafeClientConnManager connManager = new ThreadSafeClientConnManager(); </br>
+	 *   PoolingClientConnectionManager connManager = new PoolingClientConnectionManager(); </br>
 	 *   conmManager.setMaxTotal(MAX_THREADS); </br>
 	 *   connManager.setDefaultMaxPerRoute(MAX_THREADS); </br>
 	 *   HttpClient client = new DefaultHttpClient(connManager); </br>
