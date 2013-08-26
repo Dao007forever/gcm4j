@@ -170,7 +170,7 @@ class AsyncGcmManagerImpl implements AsyncGcmManager {
 		@Override
 		public void run() {
 			try {
-				AsyncGcmManagerImpl.this.process(context);
+				process(context);
 			} catch (RuntimeException e) {
 				LOGGER.warn(
 						"Unexpected RuntimeException while processing GCM message.",

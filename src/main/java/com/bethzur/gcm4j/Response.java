@@ -1,12 +1,12 @@
 /*
  * Copyright 2012 The Regents of the University of Michigan
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 package com.bethzur.gcm4j;
+
+import java.util.Date;
 
 /**
  * Encapsulates a response from the GCM service. This interface includes
@@ -24,27 +26,42 @@ package com.bethzur.gcm4j;
  * subclasses: {@link SuccessResponse} and {@link UnavailableResponse}. The
  * specific (sub)class associated with any {@link ResponseType} can be retrieved
  * via {@link ResponseType#associatedClass()}.
- *
+ * 
  * @see ResponseType
  * @see SuccessResponse
  * @see UnavailableResponse
- *
+ * 
  * @author David R. Bild
- *
+ * 
  */
 public interface Response {
-	/**
-	 * Gets the type of this response.
-	 *
-	 * @return the type of this response.
-	 */
-	public ResponseType getResponseType();
+    /**
+     * Gets the result of this response.
+     * 
+     * @return the result of this response.
+     */
+    public ResponseType.ServerResponse getServerResponse();
 
-	/**
-	 * Retrieves the associated message (i.e., that passed to
-	 * {@link GcmManager#pushMessage(Message)}) for this response.
-	 *
-	 * @return the associated response
-	 */
-	public Message getMessage();
+    /**
+     * Gets the result of this response.
+     * 
+     * @return the result of this response.
+     */
+    public MulticastResult getResult();
+
+    /**
+     * Retrieves the {@code Retry-After} header if the response included one.
+     * 
+     * @return the {@code Retry-After} header if included; {@code null}
+     *         otherwise.
+     */
+    public Date retryAfter();
+
+    /**
+     * Retrieves the associated message (i.e., that passed to
+     * {@link GcmManager#pushMessage(Message)}) for this response.
+     * 
+     * @return the associated response
+     */
+    public Message getMessage();
 }

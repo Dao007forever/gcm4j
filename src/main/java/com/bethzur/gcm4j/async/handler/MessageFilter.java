@@ -16,6 +16,7 @@
 package com.bethzur.gcm4j.async.handler;
 
 import com.bethzur.gcm4j.Message;
+import com.bethzur.gcm4j.Response;
 
 /**
  * Interface for a message filter. Methods are provided for filtering when
@@ -42,4 +43,11 @@ public interface MessageFilter {
 	 */
 	public void dequeueFilter(Context<Message, MessageDecision> context);
 
+	/**
+     * Return whether this filter support the response (base on the type and the message)
+     * 
+     * @param response
+     *            the response (http response and the message)
+     */
+	public boolean support(Response response);
 }

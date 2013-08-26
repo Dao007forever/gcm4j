@@ -15,7 +15,9 @@
  */
 package com.bethzur.gcm4j;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 /**
@@ -40,7 +42,7 @@ import java.util.Map;
  */
 public class MessageBuilder {
 
-	private String registrationId;
+	private Collection<String> registrationIds;
 
 	private String collapseKey;
 
@@ -54,7 +56,7 @@ public class MessageBuilder {
 	 * Constructs a new, empty {@code MessageBuilder}.
 	 */
 	public MessageBuilder() {
-		this.registrationId = null;
+		this.registrationIds = null;
 		this.collapseKey = null;
 		this.data = new HashMap<String, String>();
 		this.delayWhileIdle = false;
@@ -69,7 +71,7 @@ public class MessageBuilder {
 	 *            the builder whose fields to copy
 	 */
 	public MessageBuilder(MessageBuilder that) {
-		this.registrationId = that.registrationId;
+		this.registrationIds = that.registrationIds;
 		this.collapseKey = that.collapseKey;
 		this.data = new HashMap<String, String>(that.data);
 		this.delayWhileIdle = that.delayWhileIdle;
@@ -82,13 +84,13 @@ public class MessageBuilder {
 	 * @return the newly constructed message.
 	 */
 	public Message build() {
-		if (registrationId == null)
+		if (registrationIds == null || registrationIds.isEmpty())
 			throw new IllegalStateException(
 					"Required parameter 'Registration Id' was not specified.");
 		if (collapseKey == null)
 			throw new IllegalStateException(
 					"Required parameter 'Collapse Key' was not specified.");
-		return new MessageImpl(registrationId, collapseKey, data,
+		return new MessageImpl(registrationIds, collapseKey, data,
 				delayWhileIdle, timeToLive);
 	}
 
@@ -100,9 +102,23 @@ public class MessageBuilder {
 	 * @return this builder
 	 */
 	public MessageBuilder registrationId(String registrationId) {
-		this.registrationId = registrationId;
+		this.registrationIds = new HashSet<String>();
+		this.registrationIds.add(registrationId);
 		return this;
 	}
+	
+	/**
+     * Sets the registration id for future messages.
+     *
+     * @param registrationIds
+     *            the registration ids for future messages
+     * @return this builder
+     */
+    public MessageBuilder registrationIds(Collection<String> registrationIds) {
+        this.registrationIds = new HashSet<String>();
+        this.registrationIds.addAll(registrationIds);
+        return this;
+    }
 
 	/**
 	 * Sets the collapse key for future messages.
@@ -184,8 +200,8 @@ public class MessageBuilder {
 	@Override
 	public String toString() {
 		return String
-				.format("Message(registrationId=\"%s\", collapseKey=\"%s\", delayWhileIdle=%b, timeToLive=%d, data=%s)",
-						registrationId, collapseKey, delayWhileIdle, timeToLive, data);
+				.format("Message(registrationIds=\"%s\", collapseKey=\"%s\", delayWhileIdle=%b, timeToLive=%d, data=%s)",
+						registrationIds, collapseKey, delayWhileIdle, timeToLive, data);
 	}
 
 	/**
@@ -197,7 +213,7 @@ public class MessageBuilder {
 	 */
 	private static class MessageImpl implements Message {
 
-		private final String registrationId;
+		private final Collection<String> registrationIds;
 
 		private final String collapseKey;
 
@@ -207,9 +223,9 @@ public class MessageBuilder {
 
 		private final int timeToLive;
 
-		public MessageImpl(String registrationId, String collapseKey,
+		public MessageImpl(Collection<String> registrationIds, String collapseKey,
 				Map<String, String> data, boolean delayWhileIdle, int timeToLive) {
-			this.registrationId = registrationId;
+			this.registrationIds = registrationIds;
 			this.collapseKey = collapseKey;
 			this.data = new HashMap<String, String>(data);
 			this.delayWhileIdle = delayWhileIdle;
@@ -217,8 +233,8 @@ public class MessageBuilder {
 		}
 
 		@Override
-		public String getRegistrationId() {
-			return registrationId;
+		public Collection<String> getRegistrationIds() {
+			return registrationIds;
 		}
 
 		@Override
@@ -244,8 +260,8 @@ public class MessageBuilder {
 		@Override
 		public String toString() {
 			return String
-					.format("Message(registrationId=\"%s\", collapseKey=\"%s\", delayWhileIdle=%b, timeToLive=%d, data=%s)",
-							registrationId, collapseKey, delayWhileIdle, timeToLive, data);
+					.format("Message(registrationIds=\"%s\", collapseKey=\"%s\", delayWhileIdle=%b, timeToLive=%d, data=%s)",
+							registrationIds, collapseKey, delayWhileIdle, timeToLive, data);
 		}
 
 		@Override
@@ -259,7 +275,7 @@ public class MessageBuilder {
 			result = prime * result + timeToLive;
 			result = prime
 					* result
-					+ ((registrationId == null) ? 0 : registrationId.hashCode());
+					+ ((registrationIds == null) ? 0 : registrationIds.hashCode());
 			return result;
 		}
 
@@ -286,10 +302,10 @@ public class MessageBuilder {
 				return false;
 			if (timeToLive != other.timeToLive)
 				return false;
-			if (registrationId == null) {
-				if (other.registrationId != null)
+			if (registrationIds == null) {
+				if (other.registrationIds != null)
 					return false;
-			} else if (!registrationId.equals(other.registrationId))
+			} else if (!registrationIds.equals(other.registrationIds))
 				return false;
 			return true;
 		}

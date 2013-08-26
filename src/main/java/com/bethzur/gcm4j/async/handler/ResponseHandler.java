@@ -35,4 +35,12 @@ public interface ResponseHandler<R extends Response> {
 	 *            the context associated with the response
 	 */
 	public void handleResponse(Context<R, ResultDecision> context);
+	
+	/**
+     * Handle a response received from the GCM service.
+     * 
+     * @param context
+     *            the context associated with the response
+     */
+    public boolean support(Context<R, ResultDecision> context);
 }

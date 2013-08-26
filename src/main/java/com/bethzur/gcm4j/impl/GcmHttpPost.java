@@ -15,17 +15,16 @@
  */
 package com.bethzur.gcm4j.impl;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.entity.ByteArrayEntity;
+
 import com.bethzur.gcm4j.Message;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Encapsulates an HTTP POST request to the GCM service. This class is
@@ -36,11 +35,13 @@ import com.bethzur.gcm4j.Message;
  */
 class GcmHttpPost extends HttpPost {
 
-	private static final String REGISTRATION_ID = "registration_id";
+	private static final String REGISTRATION_IDS = "registration_ids";
 	private static final String COLLAPSE_ID = "collapse_key";
 	private static final String DELAY_WHILE_IDLE = "delay_while_idle";
 	private static final String TIME_TO_LIVE = "time_to_live";
-	private static final String DATA_KEY_PREFIX = "data.";
+	private static final String DATA = "data";
+	
+	private static final ObjectMapper mapper = new ObjectMapper();
 
 	/**
 	 * Constructs a new POST requests for the specified message, authentication
@@ -64,43 +65,28 @@ class GcmHttpPost extends HttpPost {
 	}
 
 	private void initPostEntity(Message message) {
-		List<NameValuePair> params = new ArrayList<NameValuePair>();
+		Map<String, Object> json = new HashMap<String, Object>();
 
-		addParam(params, REGISTRATION_ID, message.getRegistrationId());
-		addParam(params, COLLAPSE_ID, message.getCollapseKey());
+		json.put(REGISTRATION_IDS, message.getRegistrationIds());
+		json.put(COLLAPSE_ID, message.getCollapseKey());
 		if (message.delayWhileIdle())
-			addParam(params, DELAY_WHILE_IDLE);
+			json.put(DELAY_WHILE_IDLE, Boolean.TRUE);
 
 		if (message.timeToLive() >= 0)
-			addParam(params, TIME_TO_LIVE, message.timeToLive());
+			json.put(TIME_TO_LIVE, message.timeToLive());
 
 		Map<String, String> data = message.getData();
-		for (String key : data.keySet()) {
-			addParam(params, DATA_KEY_PREFIX + key, data.get(key));
+		if (data != null && !data.isEmpty()) {
+		    json.put(DATA, data);
 		}
 
 		try {
-			this.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
-		} catch (UnsupportedEncodingException e) {
-			/*
-			 * This should not be a checked exception. Good testing will catch
-			 * if an unsupported encoding is requested.
-			 */
-			throw new RuntimeException(e.getMessage(), e);
-		}
-	}
-
-	private static void addParam(List<NameValuePair> params, String key,
-			String value) {
-		params.add(new BasicNameValuePair(key, value));
-	}
-
-	private static void addParam(List<NameValuePair> params, String key,
-			int value) {
-		params.add(new BasicNameValuePair(key, Integer.toString(value)));
-	}
-
-	private static void addParam(List<NameValuePair> params, String key) {
-		params.add(new BasicNameValuePair(key, null));
+		    ByteArrayEntity entity = new ByteArrayEntity(mapper.writeValueAsBytes(json));
+		    entity.setContentEncoding("UTF-8");
+		    entity.setContentType("application/json; charset=UTF-8");
+			this.setEntity(entity);
+		} catch (JsonProcessingException e) {
+		    throw new RuntimeException(e.getMessage(), e);
+        }
 	}
 }
