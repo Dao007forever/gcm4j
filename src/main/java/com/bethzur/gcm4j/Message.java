@@ -15,7 +15,7 @@
  */
 package com.bethzur.gcm4j;
 
-import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -39,7 +39,7 @@ public interface Message {
 	 *
 	 * @return the registration ids of the clients.
 	 */
-	public Collection<String> getRegistrationIds();
+    public List<String> getRegistrationIds();
 
 	/**
 	 * Gets the collapse key for the message. The collapse key is used to

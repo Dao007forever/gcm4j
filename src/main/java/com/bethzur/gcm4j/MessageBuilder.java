@@ -15,9 +15,10 @@
  */
 package com.bethzur.gcm4j;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -42,11 +43,11 @@ import java.util.Map;
  */
 public class MessageBuilder {
 
-	private Collection<String> registrationIds;
+    private List<String> registrationIds;
 
 	private String collapseKey;
 
-	private HashMap<String, String> data;
+	private final HashMap<String, String> data;
 
 	private boolean delayWhileIdle;
 
@@ -102,11 +103,11 @@ public class MessageBuilder {
 	 * @return this builder
 	 */
 	public MessageBuilder registrationId(String registrationId) {
-		this.registrationIds = new HashSet<String>();
+        this.registrationIds = new ArrayList<String>();
 		this.registrationIds.add(registrationId);
 		return this;
 	}
-	
+
 	/**
      * Sets the registration id for future messages.
      *
@@ -115,7 +116,7 @@ public class MessageBuilder {
      * @return this builder
      */
     public MessageBuilder registrationIds(Collection<String> registrationIds) {
-        this.registrationIds = new HashSet<String>();
+        this.registrationIds = new ArrayList<String>();
         this.registrationIds.addAll(registrationIds);
         return this;
     }
@@ -213,7 +214,7 @@ public class MessageBuilder {
 	 */
 	private static class MessageImpl implements Message {
 
-		private final Collection<String> registrationIds;
+        private final List<String> registrationIds;
 
 		private final String collapseKey;
 
@@ -223,7 +224,7 @@ public class MessageBuilder {
 
 		private final int timeToLive;
 
-		public MessageImpl(Collection<String> registrationIds, String collapseKey,
+        public MessageImpl(List<String> registrationIds, String collapseKey,
 				Map<String, String> data, boolean delayWhileIdle, int timeToLive) {
 			this.registrationIds = registrationIds;
 			this.collapseKey = collapseKey;
@@ -233,7 +234,7 @@ public class MessageBuilder {
 		}
 
 		@Override
-		public Collection<String> getRegistrationIds() {
+        public List<String> getRegistrationIds() {
 			return registrationIds;
 		}
 
